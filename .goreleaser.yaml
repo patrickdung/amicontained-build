@@ -11,7 +11,7 @@ dockers:
   # - image_templates: ["ghcr.io/patrickdung/amicontained-build/:{{ .Version }}"]
   #- image_templates: ["ghcr.io/patrickdung/amicontained-build:{{ .Tag }}-amd64"]
   #  use: buildx
-  #  dockerfile: Dockerfile-build
+  #  dockerfile: Dockerfile
   #  build_flag_templates:
   #    - --platform=linux/amd64
   #    - --label=org.opencontainers.image.title={{ .ProjectName }}
@@ -25,7 +25,7 @@ dockers:
   - image_templates: ["ghcr.io/patrickdung/{{ .ProjectName }}:{{ .Tag }}-arm64"]
     goarch: arm64
     use: buildx
-    dockerfile: Dockerfile-build
+    dockerfile: Dockerfile
     build_flag_templates:
       - --platform=linux/arm64
       - --label=org.opencontainers.image.title={{ .ProjectName }}

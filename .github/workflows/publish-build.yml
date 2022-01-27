@@ -331,7 +331,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: ${{matrix.platform_image_uri}}
-          args: --file=Dockerfile-build
+          args: --file=Dockerfile
 
       - name: Rename results.sarif with architecture name
         run: |
@@ -352,7 +352,7 @@ jobs:
           sysdig-secure-token: ${{ secrets.SYSDIG_SECURE_TOKEN}}
           # Sysdig secure endpoint. Please read: https://docs.sysdig.com/en/docs/administration/saas-regions-and-ip-ranges/
           sysdig-secure-url: https://app.au1.sysdig.com
-          dockerfile-path: ./Dockerfile-build
+          dockerfile-path: ./Dockerfile
           input-type: docker-daemon
           ignore-failed-scan: true
           # Sysdig inline scanner requires privileged rights

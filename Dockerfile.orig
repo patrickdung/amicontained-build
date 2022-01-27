@@ -1,4 +1,5 @@
 FROM golang:alpine as builder
+MAINTAINER Jessica Frazelle <jess@linux.com>
 
 ENV PATH /go/bin:/usr/local/go/bin:$PATH
 ENV GOPATH /go
@@ -29,4 +30,4 @@ COPY --from=builder /usr/bin/amicontained /usr/bin/amicontained
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs
 
 ENTRYPOINT [ "amicontained" ]
-#CMD [ "--help" ]
+CMD [ "--help" ]
