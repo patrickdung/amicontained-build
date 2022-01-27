@@ -1,4 +1,5 @@
-FROM golang:alpine as builder
+#FROM golang:alpine as builder
+FROM docker.io/library/golang:alpine as builder
 
 ENV PATH /go/bin:/usr/local/go/bin:$PATH
 ENV GOPATH /go
@@ -18,13 +19,15 @@ RUN set -eux \
 		libgcc \
 		make \
 	&& cd /go/src/github.com/genuinetools/amicontained \
+        && ls -lR /go \
 	&& GOARCH=arm64 go build \
 	&& mv amicontained-build /usr/bin/amicontained \
 	&& apk del .build-deps \
 	&& rm -rf /go \
 	&& echo "Build complete."
 
-FROM alpine:latest
+#FROM alpine:latest
+FROM docker.io/library/alpine:latest
 
 COPY --from=builder /usr/bin/amicontained /usr/bin/amicontained
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs
