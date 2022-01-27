@@ -1,0 +1,51 @@
+---
+project_name: amicontained-build
+builds:
+  - env: [CGO_ENABLED=0]
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+dockers:
+  # - image_templates: ["ghcr.io/patrickdung/amicontained-build/:{{ .Version }}"]
+  - image_templates: ["ghcr.io/patrickdung/amicontained-build/:{{ .Tag }}-amd64"]
+    use: buildx
+    dockerfile: Dockerfile-build
+    build_flag_templates:
+      - --platform=linux/amd64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/genuinetools/amicontained
+      - --label=org.opencontainers.image.source=https://github.com/patrickdung/amicontained-build
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+  - image_templates: ["ghcr.io/patrickdung/amicontained-build/:{{ .Tag }}-arm64"]
+    use: buildx
+    dockerfile: Dockerfile-build
+    build_flag_templates:
+      - --platform=linux/arm64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/genuinetools/amicontained
+      - --label=org.opencontainers.image.source=https://github.com/patrickdung/amicontained-build
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+docker_manifests:
+  - name_template: ghcr.io/patrickdung/amicontained-build/:{{ .Tag }}
+    image_templates:
+      - ghcr.io/patrickdung/amicontained-build/:{{ .Tag }}-amd64
+      - ghcr.io/patrickdung/amicontained-build/:{{ .Tag }}-arm64
+nfpms:
+  - maintainer: https://github.com/patrickdung/amicontained-build
+    description: Unofficial build of amicontained
+    homepage: https://github.com/patrickdung/amicontained-build
+    license: MIT
+    formats:
+      - deb
+      - rpm
+      - apk
