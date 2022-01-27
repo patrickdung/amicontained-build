@@ -5,3 +5,11 @@
 - Due to https://github.com/genuinetools/amicontained/pull/15/commits[adding the checking seccomp filter function], the arm64 build is not working for the offical repo >=0.46.
 This repo reverted the comment so the checking of blocked seccomp function does not work.
 - Use it at your own risk.
+
+== How to build with GitHub
+[source, bash]
+----
+replace "-p0" in below
+$ git tag v0.4.9-p0 -m "arm64 release"
+$ git push origin v0.4.9-p0
+----
