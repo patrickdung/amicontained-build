@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/genuinetools/amicontained/version"
+	//"github.com/genuinetools/amicontained/version"
 	"github.com/genuinetools/pkg/cli"
 	"github.com/jessfraz/bpfd/proc"
 	"github.com/sirupsen/logrus"
@@ -30,8 +30,8 @@ func main() {
 	p.Description = "A container introspection tool"
 
 	// Set the GitCommit and Version.
-	p.GitCommit = version.GITCOMMIT
-	p.Version = version.VERSION
+	//p.GitCommit = version.GITCOMMIT
+	//p.Version = version.VERSION
 
 	// Setup the global flags.
 	p.FlagSet = flag.NewFlagSet("ship", flag.ExitOnError)
