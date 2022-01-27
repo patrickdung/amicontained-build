@@ -75,7 +75,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: main
 
       - name: Get branch name /tag/version name of current release
         id: get-remote-branch-name
