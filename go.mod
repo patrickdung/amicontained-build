@@ -1,4 +1,4 @@
-# module github.com/genuinetools/amicontained
+// module github.com/genuinetools/amicontained
 
 module amicontained-build
 
