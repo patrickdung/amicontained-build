@@ -12,6 +12,7 @@ import (
 	"time"
 
 	//"github.com/genuinetools/amicontained/version"
+	"github.com/patrickdung/amicontained-build/version"
 	"github.com/genuinetools/pkg/cli"
 	"github.com/jessfraz/bpfd/proc"
 	"github.com/sirupsen/logrus"
