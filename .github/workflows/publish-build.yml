@@ -67,7 +67,7 @@ jobs:
       # id-token: write # needed for signing the images with GitHub OIDC **not production ready**
     outputs:
       remote_branch_name: ${{ steps.get-remote-branch-name.outputs.remote_branch_name }}
-      container_digest_amd64: ${{ steps.get-container-digest-amd64.outputs.container_digest }}
+      #container_digest_amd64: ${{ steps.get-container-digest-amd64.outputs.container_digest }}
       container_digest_arm64: ${{ steps.get-container-digest-arm64.outputs.container_digest }}
 
     steps:
@@ -124,12 +124,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
 
-      - name: "Get the digest of container (amd64)"
-        id: get-container-digest-amd64
-        run: |
-          skopeo inspect --raw docker://${{needs.init-env.outputs.container_registry_base_uri}}:${{env.REMOTE_BRANCH_NAME}} | \
-            jq -r '.manifests[] | select(.platform .architecture=="amd64" and .platform .os=="linux") | .digest' > /tmp/container-digest-amd64
-          echo "::set-output name=container_digest::$(cat /tmp/container-digest-amd64)"
+      #- name: "Get the digest of container (amd64)"
+      #  id: get-container-digest-amd64
+      #  run: |
+      #    skopeo inspect --raw docker://${{needs.init-env.outputs.container_registry_base_uri}}:${{env.REMOTE_BRANCH_NAME}} | \
+      #      jq -r '.manifests[] | select(.platform .architecture=="amd64" and .platform .os=="linux") | .digest' > /tmp/container-digest-amd64
+      #    echo "::set-output name=container_digest::$(cat /tmp/container-digest-amd64)"
       - name: "Get the digest of container (arm64)"
         id: get-container-digest-arm64
         run: |
@@ -167,8 +167,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: amd64
-            platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.publish-with-crossbuild.outputs.container_digest_amd64 }}"
+          #- arch: amd64
+          #  platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.publish-with-crossbuild.outputs.container_digest_amd64 }}"
           - arch: arm64
             platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.publish-with-crossbuild.outputs.container_digest_arm64 }}"
 
@@ -324,7 +324,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: ${{matrix.platform_image_uri}}
-          args: --file=Dockerfile
+          args: --file=Dockerfile-build
 
       - name: Rename results.sarif with architecture name
         run: |
@@ -345,7 +345,7 @@ jobs:
           sysdig-secure-token: ${{ secrets.SYSDIG_SECURE_TOKEN}}
           # Sysdig secure endpoint. Please read: https://docs.sysdig.com/en/docs/administration/saas-regions-and-ip-ranges/
           sysdig-secure-url: https://app.au1.sysdig.com
-          dockerfile-path: ./Dockerfile
+          dockerfile-path: ./Dockerfile-build
           input-type: docker-daemon
           ignore-failed-scan: true
           # Sysdig inline scanner requires privileged rights
