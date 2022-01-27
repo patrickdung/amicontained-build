@@ -142,7 +142,7 @@ jobs:
             "${{ needs.init-env.outputs.container_registry_base_uri }}:${{ env.REMOTE_BRANCH_NAME }}"
 
   build-sbom-and-scanning:
-    needs: [init-env, publish-with-crossbuild, build-docker-image]
+    needs: [init-env, publish-with-crossbuild]
     name: Build SBOM and image scanning
     runs-on: ubuntu-latest
     continue-on-error: false
@@ -166,9 +166,9 @@ jobs:
       matrix:
         include:
           - arch: amd64
-            platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.build-docker-image.outputs.container_digest_amd64 }}"
+            platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.publish-with-crossbuild.outputs.container_digest_amd64 }}"
           - arch: arm64
-            platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.build-docker-image.outputs.container_digest_arm64 }}"
+            platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.publish-with-crossbuild.outputs.container_digest_arm64 }}"
 
     steps:
       - name: Set env REMOTE_BRANCH_NAME
