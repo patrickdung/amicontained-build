@@ -1,5 +1,5 @@
 FROM golang:alpine as builder
-MAINTAINER Jessica Frazelle <jess@linux.com>
+#MAINTAINER Jessica Frazelle <jess@linux.com>
 
 ENV PATH /go/bin:/usr/local/go/bin:$PATH
 ENV GOPATH /go
@@ -10,6 +10,7 @@ RUN	apk add --no-cache \
 
 COPY . /go/src/github.com/genuinetools/amicontained
 
+	# && make static \
 RUN set -x \
 	&& apk add --no-cache --virtual .build-deps \
 		git \
@@ -18,8 +19,8 @@ RUN set -x \
 		libgcc \
 		make \
 	&& cd /go/src/github.com/genuinetools/amicontained \
-	&& make static \
-	&& mv amicontained /usr/bin/amicontained \
+	&& GOARCH=arm64 go build \
+	&& mv amicontained-build /usr/bin/amicontained \
 	&& apk del .build-deps \
 	&& rm -rf /go \
 	&& echo "Build complete."
