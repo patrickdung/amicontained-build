@@ -17,12 +17,13 @@ dockers:
   #    - --label=org.opencontainers.image.title={{ .ProjectName }}
   #    - --label=org.opencontainers.image.description={{ .ProjectName }}
   #    - --label=org.opencontainers.image.url=https://github.com/genuinetools/amicontained
-  #    - --label=org.opencontainers.image.source=https://github.com/patrickdung/amicontained-build
+  #    - --label=org.opencontainers.image.source=https://github.com/patrickdung/{{ .ProjectName }}
   #    - --label=org.opencontainers.image.version={{ .Version }}
   #    - --label=org.opencontainers.image.created={{ .Date }}
   #    - --label=org.opencontainers.image.revision={{ .FullCommit }}
   #    - --label=org.opencontainers.image.licenses=MIT
-  - image_templates: ["ghcr.io/patrickdung/amicontained-build:{{ .Tag }}-arm64"]
+  - image_templates: ["ghcr.io/patrickdung/{{ .ProjectName }}:{{ .Tag }}-arm64"]
+    goarch: arm64
     use: buildx
     dockerfile: Dockerfile-build
     build_flag_templates:
@@ -30,20 +31,20 @@ dockers:
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
       - --label=org.opencontainers.image.url=https://github.com/genuinetools/amicontained
-      - --label=org.opencontainers.image.source=https://github.com/patrickdung/amicontained-build
+      - --label=org.opencontainers.image.source=https://github.com/patrickdung/{{ .ProjectName }}
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.created={{ .Date }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=MIT
 docker_manifests:
-  - name_template: ghcr.io/patrickdung/amicontained-build:{{ .Tag }}
+  - name_template: ghcr.io/patrickdung/{{ .ProjectName }}:{{ .Tag }}
     image_templates:
       # - ghcr.io/patrickdung/amicontained-build:{{ .Tag }}-amd64
-      - ghcr.io/patrickdung/amicontained-build:{{ .Tag }}-arm64
+      - ghcr.io/patrickdung/{{ .ProjectName }}:{{ .Tag }}-arm64
 nfpms:
-  - maintainer: https://github.com/patrickdung/amicontained-build
+  - maintainer: https://github.com/patrickdung/{{ .ProjectName }}
     description: Unofficial build of amicontained
-    homepage: https://github.com/patrickdung/amicontained-build
+    homepage: https://github.com/patrickdung/{{ .ProjectName }}
     license: MIT
     formats:
       - deb
