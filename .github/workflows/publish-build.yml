@@ -6,10 +6,12 @@
 name: Release using Go releaser
 on:
   push:
-    branches:
-      - 'dev'
+    # branches:
+    #  - 'main'
     # paths:
     #  - 'release-versions/*'
+    tags:
+      - '*'
 env:
   # CONTAINER_REGISTRY: quay.io
   # CONTAINER_REPOSITORY: patrickdung/docker-images-meilisearch
