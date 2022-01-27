@@ -11,6 +11,7 @@ RUN	apk add --no-cache \
 COPY . /go/src/github.com/genuinetools/amicontained
 
 	#&& make static \
+	#&& GOARCH=arm64 go build \
 RUN set -eux \
 	&& apk add --no-cache --virtual .build-deps \
 		git \
@@ -20,7 +21,6 @@ RUN set -eux \
 		make \
 	&& cd /go/src/github.com/genuinetools/amicontained \
         && ls -lR /go \
-	&& GOARCH=arm64 go build \
 	&& mv amicontained-build /usr/bin/amicontained \
 	&& apk del .build-deps \
 	&& rm -rf /go \
