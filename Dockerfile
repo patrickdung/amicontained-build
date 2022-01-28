@@ -21,7 +21,7 @@ RUN set -eux \
 		make \
 	&& cd /go/src/github.com/genuinetools/amicontained \
         && ls -lR /go \
-	&& mv amicontained-build /usr/bin/amicontained \
+	&& cp -p amicontained-build /usr/bin/amicontained \
 	&& apk del .build-deps \
 	&& rm -rf /go \
 	&& echo "Build complete."

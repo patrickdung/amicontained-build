@@ -7,6 +7,9 @@ builds:
     goarch:
       #- amd64
       - arm64
+    archives:
+      - checksum:
+          name_template: 'checksums.txt'
 dockers:
   # - image_templates: ["ghcr.io/patrickdung/amicontained-build/:{{ .Version }}"]
   #- image_templates: ["ghcr.io/patrickdung/amicontained-build:{{ .Tag }}-amd64"]
