@@ -1,6 +1,8 @@
 #FROM golang:alpine as builder
 FROM docker.io/library/golang:alpine as builder
 
+ARG ARCH
+
 ENV PATH /go/bin:/usr/local/go/bin:$PATH
 ENV GOPATH /go
 
@@ -21,7 +23,7 @@ RUN set -eux \
 		make \
 	&& cd /go/src/github.com/genuinetools/amicontained \
         && ls -lR /go \
-	&& cp -p amicontained-build /usr/bin/amicontained \
+	&& cp -p amicontained-${ARCH} /usr/bin/amicontained \
 	&& apk del .build-deps \
 	&& rm -rf /go \
 	&& echo "Build complete."
