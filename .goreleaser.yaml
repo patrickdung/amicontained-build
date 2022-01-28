@@ -1,15 +1,16 @@
 ---
 project_name: amicontained-build
 builds:
-  - main: ./main.go
+  - id: amicontained-amd64
+    main: ./main.go
     env: [CGO_ENABLED=0]
     goos:
       - linux
     goarch:
       - amd64
     binary: amicontained-amd64
-
-  - main: ./main-arm64.go
+  - id: amicontained-arm64
+    main: ./main-arm64.go
     env: [CGO_ENABLED=0]
     goos:
       - linux
