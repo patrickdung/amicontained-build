@@ -77,6 +77,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
+          # needs tags for goreleaser, depth = 1 if unspecified
+          fetch-depth: 0
 
       - name: Get branch name /tag/version name of current release
         id: get-remote-branch-name
@@ -121,7 +123,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.PUBLISH_TOKEN }}
 
-      - name: Build with Gorelease
+      - name: Build with Goreleaser
         uses: goreleaser/goreleaser-action@v2
         # if: success() && startsWith(github.ref, 'refs/tags/')
         with:

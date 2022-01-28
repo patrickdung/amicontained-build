@@ -10,6 +10,12 @@ builds:
 # https://goreleaser.com/customization/checksum/
 checksum:
   name_template: 'checksums.txt'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
 
 dockers:
   # - image_templates: ["ghcr.io/patrickdung/amicontained-build/:{{ .Version }}"]
