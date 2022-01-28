@@ -68,7 +68,7 @@ jobs:
       # id-token: write # needed for signing the images with GitHub OIDC **not production ready**
     outputs:
       remote_branch_name: ${{ steps.get-remote-branch-name.outputs.remote_branch_name }}
-      #container_digest_amd64: ${{ steps.get-container-digest-amd64.outputs.container_digest }}
+      container_digest_amd64: ${{ steps.get-container-digest-amd64.outputs.container_digest }}
       container_digest_arm64: ${{ steps.get-container-digest-arm64.outputs.container_digest }}
 
     steps:
@@ -77,7 +77,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
-          # needs tags for goreleaser, depth = 1 if unspecified
+          # needs tags for goreleaser. If unspecified, fetch-depth is 1
           fetch-depth: 0
 
       - name: Get branch name /tag/version name of current release
@@ -139,7 +139,8 @@ jobs:
       #  with:
       #    # draft: true
       #    files: |
-      #      #go/src/github.com/genuinetools/amicontained/amicontainerd-build
+      #      #go/src/github.com/genuinetools/amicontained/amicontainerd-amd64
+      #      #go/src/github.com/genuinetools/amicontained/amicontainerd-arm64
       #      #go/src/github.com/genuinetools/amicontained/*.apk
       #      #go/src/github.com/genuinetools/amicontained/*.deb
       #      #go/src/github.com/genuinetools/amicontained/*.rpm
@@ -151,12 +152,12 @@ jobs:
       #  env:
       #    GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
 
-      #- name: "Get the digest of container (amd64)"
-      #  id: get-container-digest-amd64
-      #  run: |
-      #    skopeo inspect --raw docker://${{needs.init-env.outputs.container_registry_base_uri}}:${{env.REMOTE_BRANCH_NAME}} | \
-      #      jq -r '.manifests[] | select(.platform .architecture=="amd64" and .platform .os=="linux") | .digest' > /tmp/container-digest-amd64
-      #    echo "::set-output name=container_digest::$(cat /tmp/container-digest-amd64)"
+      - name: "Get the digest of container (amd64)"
+        id: get-container-digest-amd64
+        run: |
+          skopeo inspect --raw docker://${{needs.init-env.outputs.container_registry_base_uri}}:${{env.REMOTE_BRANCH_NAME}} | \
+            jq -r '.manifests[] | select(.platform .architecture=="amd64" and .platform .os=="linux") | .digest' > /tmp/container-digest-amd64
+          echo "::set-output name=container_digest::$(cat /tmp/container-digest-amd64)"
       - name: "Get the digest of container (arm64)"
         id: get-container-digest-arm64
         run: |
@@ -199,8 +200,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          #- arch: amd64
-          #  platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.publish-with-crossbuild.outputs.container_digest_amd64 }}"
+          - arch: amd64
+            platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.publish-with-crossbuild.outputs.container_digest_amd64 }}"
           - arch: arm64
             platform_image_uri: "${{needs.init-env.outputs.container_registry_base_uri}}@${{ needs.publish-with-crossbuild.outputs.container_digest_arm64 }}"
 
@@ -210,7 +211,7 @@ jobs:
           echo "REMOTE_BRANCH_NAME=${{ needs.publish-with-crossbuild.outputs.remote_branch_name }}" >> $GITHUB_ENV
 
       - name: Checkout this repository
-        # some vuln scanner want to have the Dockerfile
+        # some vuln scanners want to have the Dockerfile
         uses: actions/checkout@v2
         with:
           ref: main
