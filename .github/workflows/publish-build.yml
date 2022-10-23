@@ -44,7 +44,7 @@ jobs:
       - name: Set env for later jobs
         id: set-env
         run: |
-          echo "::set-output name=container_registry_base_uri::$(echo $CONTAINER_REGISTRY/$(echo $CONTAINER_REPOSITORY | tr 'A-Z' 'a-z'))"
+          echo "container_registry_base_uri=$(echo $CONTAINER_REGISTRY/$(echo $CONTAINER_REPOSITORY | tr 'A-Z' 'a-z'))" >> $GITHUB_OUTPUT
 
   publish-with-crossbuild:
     name: Publish to Github
@@ -87,7 +87,7 @@ jobs:
           #echo "::set-output name=remote_branch_name::$(cat ./VERSION.txt)"
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             echo "REMOTE_BRANCH_NAME=${GITHUB_REF#refs/tags/*}" >> $GITHUB_ENV
-            echo ::set-output name=remote_branch_name::${GITHUB_REF#refs/tags/}
+            echo "remote_branch_name=${GITHUB_REF#refs/tags/}"
           fi
 
       - name: Set up Go
@@ -157,13 +157,13 @@ jobs:
         run: |
           skopeo inspect --raw docker://${{needs.init-env.outputs.container_registry_base_uri}}:${{env.REMOTE_BRANCH_NAME}} | \
             jq -r '.manifests[] | select(.platform .architecture=="amd64" and .platform .os=="linux") | .digest' > /tmp/container-digest-amd64
-          echo "::set-output name=container_digest::$(cat /tmp/container-digest-amd64)"
+          echo "container_digest=$(cat /tmp/container-digest-amd64)" >> $GITHUB_OUTPUT
       - name: "Get the digest of container (arm64)"
         id: get-container-digest-arm64
         run: |
           skopeo inspect --raw docker://${{needs.init-env.outputs.container_registry_base_uri}}:${{env.REMOTE_BRANCH_NAME}} | \
             jq -r '.manifests[] | select(.platform .architecture=="arm64" and .platform .os=="linux") | .digest' > /tmp/container-digest-arm64
-          echo "::set-output name=container_digest::$(cat /tmp/container-digest-arm64)"
+          echo "container_digest=$(cat /tmp/container-digest-arm64)" >> $GITHUB_OUTPUT
 
       - name: Install Cosign GH action
         uses: sigstore/cosign-installer@main
