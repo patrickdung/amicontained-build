@@ -87,7 +87,7 @@ jobs:
           #echo "::set-output name=remote_branch_name::$(cat ./VERSION.txt)"
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             echo "REMOTE_BRANCH_NAME=${GITHUB_REF#refs/tags/*}" >> $GITHUB_ENV
-            echo "remote_branch_name=${GITHUB_REF#refs/tags/}"
+            echo "remote_branch_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           fi
 
       - name: Set up Go
