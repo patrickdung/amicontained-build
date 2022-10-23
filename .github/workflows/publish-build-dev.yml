@@ -41,7 +41,7 @@ jobs:
       - name: Set env for later jobs
         id: set-env
         run: |
-          echo "::set-output name=container_registry_base_uri::$(echo $CONTAINER_REGISTRY/$(echo $CONTAINER_REPOSITORY | tr 'A-Z' 'a-z'))"
+          echo "container_registry_base_uri=$(echo $CONTAINER_REGISTRY/$(echo $CONTAINER_REPOSITORY | tr 'A-Z' 'a-z'))"
 
   publish-with-crossbuild:
     name: Publish to Github
@@ -79,12 +79,12 @@ jobs:
         id: get-remote-branch-name
         run: |
           echo "REMOTE_BRANCH_NAME=$(cat ./VERSION.txt)" >> $GITHUB_ENV
-          echo "::set-output name=remote_branch_name::$(cat ./VERSION.txt)"
+          echo "remote_branch_name=$(cat ./VERSION.txt)"
 
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: 1.18
 
       - name: Cache Go modules
         uses: actions/cache@v1
@@ -127,13 +127,13 @@ jobs:
         run: |
           skopeo inspect --raw docker://${{needs.init-env.outputs.container_registry_base_uri}}:${{env.REMOTE_BRANCH_NAME}} | \
             jq -r '.manifests[] | select(.platform .architecture=="amd64" and .platform .os=="linux") | .digest' > /tmp/container-digest-amd64
-          echo "::set-output name=container_digest::$(cat /tmp/container-digest-amd64)"
+          echo "container_digest=$(cat /tmp/container-digest-amd64)"
       - name: "Get the digest of container (arm64)"
         id: get-container-digest-arm64
         run: |
           skopeo inspect --raw docker://${{needs.init-env.outputs.container_registry_base_uri}}:${{env.REMOTE_BRANCH_NAME}} | \
             jq -r '.manifests[] | select(.platform .architecture=="arm64" and .platform .os=="linux") | .digest' > /tmp/container-digest-arm64
-          echo "::set-output name=container_digest::$(cat /tmp/container-digest-arm64)"
+          echo "container_digest=$(cat /tmp/container-digest-arm64)"
 
       - name: Use Cosign to sign the image recursively
         run: |
